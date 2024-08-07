@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Detail {% endblock %}
+{% block body %}
+<div align="middle">
+    <h1>{{blog.title}}</h1>
+</div>
+<div align="middle" class="col-md-4 mt-3">
+    <img class="img-thumbnail" src="{{ blog.author.profile.image.url }}" alt="img">
+    <!-- <div class="col-md-4"> -->
+        <div class="card shadow my-3">
+            <div class="card-body">
+                <form method="POST">
+                    {%csrf_token %}
+                    {{commentForm|crispy}}
+                    <button class="btn btn-primary btn-block " type="submit">Comment</button>
+                </form>
+            </div>
+        </div>
+    <!-- </div> -->
+</div>
+
+<div class="container col-md-8 offset-md-6">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow my-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small style="color: gray;">{{ blog.created_on }}</small>
+                            <small><a href="{% url 'share' blog.id %}" class="btn btn-secondary btn-sm float-right">Share via Email</a></small>
+                            {% if blog.author == request.user %}
+                            <span><a class="btn btn-danger btn-sm float-right mx-2"
+                                    href="{% url 'delete' blog.id %}">Delete</a></span>
+                            <span><a class="btn btn-primary btn-sm float-right mx-2"
+                                    href="{% url 'update' blog.id %}">Edit</a></span>
+                            <hr>
+                            <section>
+                                {{ blog.content|linebreaksbr }}
+                            </section>
+                            {% else %}
+                            <hr>
+                            <section>
+                                {{ blog.content|linebreaksbr }}
+                            </section>
+                            {% endif %}
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="card shadow my-3">
+                <div class="card-body">
+                    <p>
+                        <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                            aria-controls="collapseExample">
+                            <h3>Comments: {{blog.comment_count}}</h3>
+                        </a>
+
+                    </p>
+                    <div class="collapse" id="collapseExample">
+                        <div style="height: 300px; overflow-y: scroll;" class="card card-body">
+                            {% for comment in blog.comments %}
+                            <p class="text-justify">
+                            <h5 style="color: gray;">Commented by {{comment.name}} at {{comment.comment_time}}</h5>
+                             {{comment.comment}}
+                            </p>
+                            <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

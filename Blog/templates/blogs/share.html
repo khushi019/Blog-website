@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Share {{ blog.title }}{% endblock %}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-7 offset-md-2">
+            <div class="card shadow">
+                <div class="card-body">
+
+                    <h3>Share "{{ blog.title }}"</h3>
+                    {% if sent %}
+                    <div class="alert alert-info ">Your message has been sent.</div>
+                    <p><a href="{% url 'home'%}">Home</a></p>
+                    {% else %}
+                    <form method="POST" >
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

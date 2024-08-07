@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Edit {% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow my-3">
+                <div class="card-body">
+                    <form method="POST">
+                        {%csrf_token %}
+                        {{form|crispy}}
+                        <button class="btn btn-primary btn-block " type="submit">Edit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

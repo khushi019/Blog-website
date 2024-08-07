@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Home {% endblock %}
+{% block body %}
+<div align="middle">
+    <h1>BLOG</h1>
+</div>
+<div class="blog">
+    <div class="container">
+        <div class="row mt-5 pt-3">
+            <div class="col-md-4">
+                <div class="card shadow my-3">
+                    <div class="card-body">
+                        <form method="POST">
+                            {%csrf_token %}
+                            {{form|crispy}}
+                            <button class="btn btn-primary btn-block " type="submit">POST</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                {% for blog in blog %}
+                <div class="card shadow my-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img class="img-thumbnail " src="{{ blog.author.profile.image.url }}" alt="img">
+
+                            </div>
+                            <div class="col-md-7">
+                                <small style="color: grey;">Published on {{blog.created_on}} by {{blog.author}}</small>
+                                <hr style="height:0.7px; background-color: black; margin-top: 4px;">
+                                <a class="h3" href="{% url 'detail' blog.id %}">{{blog.title}}</a>
+                                <div class="text-justify my-3">
+                                    {{blog.content|truncatewords:20}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+    <nav align="center" >
+        <ul class="pagination " style="width: 17%; ">
+            <li class="page-item float-left">
+                {% if blog.has_previous %}
+                <a class="page-link" href="?page={{ blog.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                {% endif %}
+            </li>
+            <span class="page-item col-md-7 " style="padding: 0px 0px;" ><h4>Page {{ blog.number }} of {{ blog.paginator.num_pages }}.</h4>
+            </span>
+            <li class="page-item">
+                {% if blog.has_next %}
+                <a class="page-link" href="?page={{ blog.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+</div>
+<!-- ?page={{ blog.paginator.num_pages }} -->
+{% endblock %}
